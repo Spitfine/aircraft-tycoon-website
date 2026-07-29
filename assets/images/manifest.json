@@ -1,0 +1,82 @@
+[
+  {
+    "file": "hero-background.webp",
+    "mime": "image/webp",
+    "sha256": "c0383a021e3cc3df39c78150e49948c5a9ded644aea1068429f579987ddb250a",
+    "bytes": 200612,
+    "source": "css:1",
+    "duplicate": false
+  },
+  {
+    "file": "current-aircraft-tycoon-alpha-gameplay-worksite.png",
+    "mime": "image/png",
+    "sha256": "5675d88dc6edea871d1e4c8aec5715b0a9d12b726055b42366f115eb408464c4",
+    "bytes": 4841557,
+    "source": "html-img:1",
+    "duplicate": false
+  },
+  {
+    "file": "pioneer-aircraft-workshop-interior.webp",
+    "mime": "image/webp",
+    "sha256": "894abe53258c343591e6f873519d379c3afc8dd30c6ff45f5f1b5c73e2abd1c8",
+    "bytes": 240846,
+    "source": "html-img:2",
+    "duplicate": false
+  },
+  {
+    "file": "current-aircraft-tycoon-alpha-gameplay-worksite.png",
+    "mime": "image/png",
+    "sha256": "5675d88dc6edea871d1e4c8aec5715b0a9d12b726055b42366f115eb408464c4",
+    "bytes": 4841557,
+    "source": "html-img:3",
+    "duplicate": true
+  },
+  {
+    "file": "pioneer-headquarters-office.webp",
+    "mime": "image/webp",
+    "sha256": "47220d05e4e8c50cc985b4bbc585a858f1f87b02d6e0c962e298eaaf13513494",
+    "bytes": 151122,
+    "source": "html-img:4",
+    "duplicate": false
+  },
+  {
+    "file": "aircraft-frame-being-designed-in-workshop.webp",
+    "mime": "image/webp",
+    "sha256": "98505768032416e65c78e2a3f1f94e3fec2ef088f3e6ea05458498ff9e92608b",
+    "bytes": 180332,
+    "source": "html-img:5",
+    "duplicate": false
+  },
+  {
+    "file": "hero-background.webp",
+    "mime": "image/webp",
+    "sha256": "c0383a021e3cc3df39c78150e49948c5a9ded644aea1068429f579987ddb250a",
+    "bytes": 200612,
+    "source": "html-img:6",
+    "duplicate": true
+  },
+  {
+    "file": "past-and-future-aircraft-worksites.webp",
+    "mime": "image/webp",
+    "sha256": "d3722a406e3777b7c44c367cc3b398bff8ebd248da3f94d637f890f8c0cb842b",
+    "bytes": 279176,
+    "source": "html-img:7",
+    "duplicate": false
+  },
+  {
+    "file": "pioneer-aircraft-workshop-interior.webp",
+    "mime": "image/webp",
+    "sha256": "894abe53258c343591e6f873519d379c3afc8dd30c6ff45f5f1b5c73e2abd1c8",
+    "bytes": 240846,
+    "source": "html-img:8",
+    "duplicate": true
+  },
+  {
+    "file": "past-and-future-aircraft-worksites.webp",
+    "mime": "image/webp",
+    "sha256": "d3722a406e3777b7c44c367cc3b398bff8ebd248da3f94d637f890f8c0cb842b",
+    "bytes": 279176,
+    "source": "html-img:9",
+    "duplicate": true
+  }
+]
