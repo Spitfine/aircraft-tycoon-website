@@ -34,7 +34,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f index.html
-          git diff --exit-code main -- index.html
+          git diff --exit-code origin/main -- index.html
           sha256sum index.html
 
       - name: Generate structured preview
@@ -51,7 +51,7 @@ jobs:
           test -s STRUCTURED_SITE_PREVIEW.md
           ! grep -R "data:image/" preview/index.html assets/css/site.css assets/js/site.js
           grep -q "store.steampowered.com/widget/4997100" preview/index.html
-          git diff --exit-code main -- index.html
+          git diff --exit-code origin/main -- index.html
 
       - name: Commit generated preview
         shell: bash
