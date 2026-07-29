@@ -17,6 +17,7 @@ This branch contains a generated, structured copy of the current Aircraft Tycoon
 - Extracted image bytes: 5893645
 - English UTM content: `steam_widget_en`
 - Portuguese UTM content: `steam_widget_pt`
+- Automated structure validation: passed
 
 ## Review gate
 
