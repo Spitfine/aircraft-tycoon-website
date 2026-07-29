@@ -8,6 +8,13 @@ on:
     paths:
       - tools/structure_site.py
       - .github/workflows/generate-structured-preview.yml
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    paths:
+      - tools/structure_site.py
+      - .github/workflows/generate-structured-preview.yml
 
 permissions:
   contents: write
