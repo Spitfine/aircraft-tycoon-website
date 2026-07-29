@@ -1,0 +1,61 @@
+name: Generate structured website preview
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/structured-site-steam-widget
+    paths:
+      - tools/structure_site.py
+      - .github/workflows/generate-structured-preview.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/structured-site-steam-widget
+          fetch-depth: 0
+
+      - name: Confirm protected production source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f index.html
+          git diff --exit-code main -- index.html
+          sha256sum index.html
+
+      - name: Generate structured preview
+        run: python3 tools/structure_site.py
+
+      - name: Validate generated structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s preview/index.html
+          test -s assets/css/site.css
+          test -s assets/js/site.js
+          test -s assets/images/manifest.json
+          test -s STRUCTURED_SITE_PREVIEW.md
+          ! grep -R "data:image/" preview/index.html assets/css/site.css assets/js/site.js
+          grep -q "store.steampowered.com/widget/4997100" preview/index.html
+          git diff --exit-code main -- index.html
+
+      - name: Commit generated preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add preview assets STRUCTURED_SITE_PREVIEW.md
+          if git diff --cached --quiet; then
+            echo "Structured preview is already current."
+            exit 0
+          fi
+          git commit -m "Generate structured website preview with Steam widget"
+          git push origin HEAD:feature/structured-site-steam-widget
