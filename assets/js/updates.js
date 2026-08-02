@@ -3,7 +3,7 @@
   const copies = document.querySelectorAll('.language-copy');
   const widget = document.getElementById('steam-update-widget');
   const widgetViewport = document.getElementById('steam-update-widget-viewport');
-  const spriteSource = '/assets/updates/aircraft-design/aircraft-design-sprite.webp';
+  const spriteSource = '/assets/updates/aircraft-design/aircraft-design-sprite.webp?v=20260802-2';
 
   function mountScreenshotImages() {
     document.querySelectorAll('.update-shot').forEach(shot => {
