@@ -27,12 +27,8 @@
 .article-actions .btn{width:100%;text-align:center}
 .article-note{margin-top:46px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
 .language-copy[hidden]{display:none!important}
-.update-shot{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background-color:#0a0d0f}
-.update-shot-image{position:absolute;width:200%;height:200%;max-width:none;object-fit:fill;display:block}
-.shot-start .update-shot-image{left:0;top:0}
-.shot-engine-warning .update-shot-image{left:-100%;top:0}
-.shot-engine-ready .update-shot-image{left:0;top:-100%}
-.shot-wings .update-shot-image{left:-100%;top:-100%}
+.update-shot{width:100%;aspect-ratio:16/9;overflow:hidden;background:#0a0d0f}
+.update-shot-image{display:block;width:100%;height:100%;object-fit:cover}
 .update-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:34px 0}
 .update-comparison .article-figure{margin:0}
 .update-callout{border-left:3px solid var(--gold);padding:18px 22px;background:rgba(200,155,82,.08);color:#e4d6c0;margin:26px 0}
