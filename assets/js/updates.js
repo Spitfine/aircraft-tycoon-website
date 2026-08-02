@@ -3,6 +3,20 @@
   const copies = document.querySelectorAll('.language-copy');
   const widget = document.getElementById('steam-update-widget');
   const widgetViewport = document.getElementById('steam-update-widget-viewport');
+  const spriteSource = '/assets/updates/aircraft-design/aircraft-design-sprite.webp';
+
+  function mountScreenshotImages() {
+    document.querySelectorAll('.update-shot').forEach(shot => {
+      if (shot.querySelector('.update-shot-image')) return;
+      const image = document.createElement('img');
+      image.className = 'update-shot-image';
+      image.src = spriteSource;
+      image.alt = '';
+      image.setAttribute('aria-hidden', 'true');
+      image.decoding = 'async';
+      shot.appendChild(image);
+    });
+  }
 
   function resizeWidget() {
     if (!widget || !widgetViewport) return;
@@ -26,6 +40,7 @@
     requestAnimationFrame(resizeWidget);
   }
 
+  mountScreenshotImages();
   buttons.forEach(button => button.addEventListener('click', () => setLanguage(button.id)));
   let initial = 'en';
   try { initial = localStorage.getItem('aircraftTycoonWebsiteLanguage') || 'en'; } catch (_) {}
