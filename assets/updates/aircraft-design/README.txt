@@ -1,0 +1,1 @@
+Aircraft Design development update assets. Runtime screenshots are supplied as a single optimized sprite for the current static-site implementation.
