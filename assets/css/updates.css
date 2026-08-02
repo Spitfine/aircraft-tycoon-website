@@ -5,8 +5,7 @@
 .updates-intro{max-width:760px;color:#cdc3b3;font-size:18px}
 .update-list{display:grid;gap:22px}
 .update-card{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:7px;overflow:hidden}
-.update-card-media{min-height:300px;background:#0a0d0f}
-.update-card-media img{width:100%;height:100%;object-fit:cover}
+.update-card-media{display:block;min-height:300px;background:#0a0d0f;overflow:hidden}
 .update-card-body{padding:34px;display:flex;flex-direction:column;justify-content:center}
 .update-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--gold2);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;margin-bottom:12px}
 .update-card h2{font-size:clamp(30px,4vw,46px);margin-bottom:16px}
@@ -14,13 +13,12 @@
 .text-link{color:var(--gold2);font-weight:800;text-decoration:underline;text-decoration-color:rgba(229,193,126,.45);text-underline-offset:5px}
 .article-header{padding:112px 0 46px;border-bottom:1px solid rgba(255,255,255,.06)}
 .article-deck{max-width:840px;color:#d4cab9;font-size:20px}
-.article-shell{display:grid;grid-template-columns:minmax(0,760px) minmax(220px,1fr);gap:58px;align-items:start}
+.article-shell{display:grid;grid-template-columns:minmax(0,820px) minmax(220px,1fr);gap:48px;align-items:start}
 .article-body{font-size:18px;color:#d0c5b5}
 .article-body h2{font-size:clamp(30px,4vw,44px);margin-top:54px}
 .article-body p{margin:0 0 22px}
 .article-body strong{color:#f0e4d1}
 .article-figure{margin:34px 0;border:1px solid #3a4349;background:#0a0d0f;border-radius:7px;overflow:hidden}
-.article-figure img{width:100%;aspect-ratio:16/9;object-fit:cover}
 .article-figure figcaption{padding:13px 15px;color:var(--muted);font-size:13px;border-top:1px solid #30383e}
 .article-sidebar{position:sticky;top:104px;border:1px solid var(--line);background:var(--panel);padding:24px;border-radius:7px}
 .article-sidebar h3{font-size:22px}
@@ -29,5 +27,23 @@
 .article-actions .btn{width:100%;text-align:center}
 .article-note{margin-top:46px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
 .language-copy[hidden]{display:none!important}
-@media(max-width:900px){.updates-page{padding-top:64px}.update-card{grid-template-columns:1fr}.update-card-media{min-height:240px}.article-shell{grid-template-columns:1fr}.article-sidebar{position:static}.updates-hero,.article-header{padding-top:86px}}
-@media(max-width:620px){.update-card-body{padding:24px}.updates-intro,.article-body{font-size:16px}.article-deck{font-size:18px}}
+.update-shot{width:100%;aspect-ratio:16/9;background-image:url('/assets/updates/aircraft-design/aircraft-design-sprite.webp');background-repeat:no-repeat;background-size:200% 200%;background-color:#0a0d0f}
+.shot-start{background-position:0 0}
+.shot-engine-warning{background-position:100% 0}
+.shot-engine-ready{background-position:0 100%}
+.shot-wings{background-position:100% 100%}
+.update-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:34px 0}
+.update-comparison .article-figure{margin:0}
+.update-callout{border-left:3px solid var(--gold);padding:18px 22px;background:rgba(200,155,82,.08);color:#e4d6c0;margin:26px 0}
+.update-stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:22px 0 34px}
+.update-stat{border:1px solid var(--line);background:var(--panel);padding:13px;border-radius:5px;text-align:center}
+.update-stat b{display:block;color:#f3e8d6;font-family:Georgia,serif;font-size:19px}.update-stat span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.steam-update-section{margin-top:48px;border-top:1px solid var(--line);padding-top:34px}
+.steam-update-section h2{margin-top:0}
+.steam-update-widget-column{max-width:646px}
+.latest-update-section{background:linear-gradient(180deg,rgba(28,36,43,.32),rgba(13,17,21,0))}
+.latest-update-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.95fr);gap:46px;align-items:center}
+.latest-update-media{border:1px solid #3a4349;border-radius:7px;overflow:hidden}
+.latest-update-date{color:var(--muted);font-size:13px;margin-bottom:14px}
+@media(max-width:900px){.updates-page{padding-top:64px}.update-card{grid-template-columns:1fr}.update-card-media{min-height:240px}.article-shell,.latest-update-grid{grid-template-columns:1fr}.article-sidebar{position:static}.updates-hero,.article-header{padding-top:86px}.update-stat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.update-card-body{padding:24px}.updates-intro,.article-body{font-size:16px}.article-deck{font-size:18px}.update-comparison{grid-template-columns:1fr}.update-stat-grid{grid-template-columns:1fr}.latest-update-section .btn{width:100%}}
