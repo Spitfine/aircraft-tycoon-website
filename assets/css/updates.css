@@ -1,0 +1,33 @@
+/* Development Updates — extends the existing Aircraft Tycoon website language. */
+.updates-page{padding-top:74px}
+.updates-hero{padding:110px 0 64px;background:linear-gradient(180deg,rgba(28,36,43,.72),rgba(13,17,21,0));border-bottom:1px solid rgba(255,255,255,.06)}
+.updates-hero h1,.article-header h1{font-size:clamp(42px,7vw,74px);max-width:920px}
+.updates-intro{max-width:760px;color:#cdc3b3;font-size:18px}
+.update-list{display:grid;gap:22px}
+.update-card{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:7px;overflow:hidden}
+.update-card-media{min-height:300px;background:#0a0d0f}
+.update-card-media img{width:100%;height:100%;object-fit:cover}
+.update-card-body{padding:34px;display:flex;flex-direction:column;justify-content:center}
+.update-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--gold2);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;margin-bottom:12px}
+.update-card h2{font-size:clamp(30px,4vw,46px);margin-bottom:16px}
+.update-card p{color:#c8bdad;font-size:17px;margin:0 0 24px}
+.text-link{color:var(--gold2);font-weight:800;text-decoration:underline;text-decoration-color:rgba(229,193,126,.45);text-underline-offset:5px}
+.article-header{padding:112px 0 46px;border-bottom:1px solid rgba(255,255,255,.06)}
+.article-deck{max-width:840px;color:#d4cab9;font-size:20px}
+.article-shell{display:grid;grid-template-columns:minmax(0,760px) minmax(220px,1fr);gap:58px;align-items:start}
+.article-body{font-size:18px;color:#d0c5b5}
+.article-body h2{font-size:clamp(30px,4vw,44px);margin-top:54px}
+.article-body p{margin:0 0 22px}
+.article-body strong{color:#f0e4d1}
+.article-figure{margin:34px 0;border:1px solid #3a4349;background:#0a0d0f;border-radius:7px;overflow:hidden}
+.article-figure img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.article-figure figcaption{padding:13px 15px;color:var(--muted);font-size:13px;border-top:1px solid #30383e}
+.article-sidebar{position:sticky;top:104px;border:1px solid var(--line);background:var(--panel);padding:24px;border-radius:7px}
+.article-sidebar h3{font-size:22px}
+.article-sidebar p{color:var(--muted);font-size:14px}
+.article-actions{display:grid;gap:10px;margin-top:20px}
+.article-actions .btn{width:100%;text-align:center}
+.article-note{margin-top:46px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.language-copy[hidden]{display:none!important}
+@media(max-width:900px){.updates-page{padding-top:64px}.update-card{grid-template-columns:1fr}.update-card-media{min-height:240px}.article-shell{grid-template-columns:1fr}.article-sidebar{position:static}.updates-hero,.article-header{padding-top:86px}}
+@media(max-width:620px){.update-card-body{padding:24px}.updates-intro,.article-body{font-size:16px}.article-deck{font-size:18px}}
