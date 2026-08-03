@@ -4,30 +4,6 @@
   const widget = document.getElementById('steam-update-widget');
   const widgetViewport = document.getElementById('steam-update-widget-viewport');
 
-  const screenshotSources = [
-    ['shot-start', '/assets/updates/aircraft-design/aircraft-design-start.webp'],
-    ['shot-engine-warning', '/assets/updates/aircraft-design/aircraft-design-warning.webp'],
-    ['shot-engine-ready', '/assets/updates/aircraft-design/aircraft-design-ready.webp'],
-    ['shot-wings', '/assets/updates/aircraft-design/aircraft-design-wings.webp']
-  ];
-
-  function mountScreenshotImages() {
-    document.querySelectorAll('.update-shot').forEach(shot => {
-      if (shot.querySelector('.update-shot-image')) return;
-
-      const source = screenshotSources.find(([className]) => shot.classList.contains(className));
-      if (!source) return;
-
-      const image = document.createElement('img');
-      image.className = 'update-shot-image';
-      image.src = source[1];
-      image.alt = shot.getAttribute('aria-label') || '';
-      image.decoding = 'async';
-      image.loading = 'lazy';
-      shot.appendChild(image);
-    });
-  }
-
   function resizeWidget() {
     if (!widget || !widgetViewport) return;
     const scale = Math.min(1, widgetViewport.clientWidth / 646);
@@ -43,8 +19,7 @@
 
     if (widget) {
       const source = lang === 'pt' ? widget.dataset.srcPt : widget.dataset.srcEn;
-      const title = lang === 'pt' ? 'Aircraft Tycoon na Steam' : 'Aircraft Tycoon on Steam';
-      widget.title = title;
+      widget.title = lang === 'pt' ? 'Aircraft Tycoon na Steam' : 'Aircraft Tycoon on Steam';
       if (source && widget.src !== source) widget.src = source;
     }
 
@@ -52,12 +27,10 @@
     requestAnimationFrame(resizeWidget);
   }
 
-  mountScreenshotImages();
   buttons.forEach(button => button.addEventListener('click', () => setLanguage(button.id)));
 
   let initial = 'en';
   try { initial = localStorage.getItem('aircraftTycoonWebsiteLanguage') || 'en'; } catch (_) {}
-
   setLanguage(initial);
   resizeWidget();
 
