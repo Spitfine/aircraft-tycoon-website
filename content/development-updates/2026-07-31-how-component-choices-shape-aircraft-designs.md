@@ -54,8 +54,8 @@ update:
       en: Development Update
       pt: Atualização de Desenvolvimento
     copy:
-      en: Aircraft Tycoon is a historical aviation management game in active
-        development by a solo developer. [CMS PILOT TEST]
+      en: "Aircraft Tycoon is a historical aviation management game in active
+        development by a solo developer. "
       pt: Aircraft Tycoon é um jogo histórico de gestão aeronáutica em desenvolvimento
         ativo por um solo developer.
   steam:
