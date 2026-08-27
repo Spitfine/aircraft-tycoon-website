@@ -2,6 +2,24 @@ settings:
   content:
     merge: true
 
+media:
+  - name: development_update_draft_images
+    label: Development Update Draft Images
+    input: editorial-drafts/media/development-updates
+    output: /__draft-media/development-updates
+    rename: safe
+    extensions:
+      - png
+      - jpg
+      - jpeg
+      - webp
+    commit:
+      templates:
+        create: "Add Development Update draft image {filename} (via Pages CMS)"
+        update: "Update Development Update draft image {filename} (via Pages CMS)"
+        delete: "Delete Development Update draft image {filename} (via Pages CMS)"
+        rename: "Rename Development Update draft image {oldFilename} to {newFilename} (via Pages CMS)"
+
 content:
   - name: development_updates
     label: Development Updates
@@ -490,6 +508,16 @@ content:
             label: Cover
             type: object
             fields:
+              - name: src
+                label: Cover image
+                type: image
+                options:
+                  media: development_update_draft_images
+                  extensions:
+                    - png
+                    - jpg
+                    - jpeg
+                    - webp
               - name: alt
                 label: Cover alt text
                 type: string
@@ -528,9 +556,15 @@ content:
                 type: object
                 fields:
                   - name: src
-                    label: Image path — temporary manual field
-                    description: Media picker/upload support will replace manual path entry in a later phase.
-                    type: string
+                    label: Image
+                    type: image
+                    options:
+                      media: development_update_draft_images
+                      extensions:
+                        - png
+                        - jpg
+                        - jpeg
+                        - webp
                   - name: alt
                     label: Alt text
                     type: object
@@ -562,9 +596,15 @@ content:
                   max: 2
                 fields:
                   - name: src
-                    label: Image path — temporary manual field
-                    description: Media picker/upload support will replace manual path entry in a later phase.
-                    type: string
+                    label: Image
+                    type: image
+                    options:
+                      media: development_update_draft_images
+                      extensions:
+                        - png
+                        - jpg
+                        - jpeg
+                        - webp
                   - name: alt
                     label: Alt text
                     type: object
