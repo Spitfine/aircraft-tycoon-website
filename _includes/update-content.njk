@@ -6,6 +6,24 @@
 <div class="update-callout"><strong>{{ label }}</strong> {{ text }}</div>
 {%- endmacro %}
 
-{% macro stats(items) -%}
-<div class="update-stat-grid">{% for item in items %}<div class="update-stat"><b>{{ item.value }}</b><span>{{ item.label }}</span></div>{% endfor %}</div>
+{% macro stats(items, language) -%}
+<div class="update-stat-grid">{% for item in items %}<div class="update-stat"><b>{{ item.value[language] }}</b><span>{{ item.label[language] }}</span></div>{% endfor %}</div>
+{%- endmacro %}
+
+{% macro renderSections(sections, language) -%}
+{%- for section in sections %}
+{%- if section.type == "prose" %}
+{{ section.body[language] | renderMarkdown | safe }}
+{%- elif section.type == "image" %}
+{{ figure(section.image.src, section.image.alt[language], section.image.caption[language]) }}
+{%- elif section.type == "comparison" %}
+<div class="update-comparison">{% for image in section.images %}{{ figure(image.src, image.alt[language], image.caption[language]) }}{% endfor %}</div>
+{%- elif section.type == "callout" %}
+{{ callout(section.title[language], section.body[language]) }}
+{%- elif section.type == "stats" %}
+{{ stats(section.items, language) }}
+{%- elif section.type == "note" %}
+<p class="article-note">{{ section.body[language] }}</p>
+{%- endif %}
+{%- endfor %}
 {%- endmacro %}
