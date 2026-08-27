@@ -13,9 +13,16 @@ export default function (eleventyConfig) {
     return markdownLibrary.render(value.trim());
   });
 
+  eleventyConfig.addCollection("publishedDevelopmentUpdates", (collectionApi) =>
+    collectionApi
+      .getFilteredByGlob("content/development-updates/*.md")
+      .filter((item) => item.data.update?.status === "published")
+      .sort((left, right) =>
+        right.data.update.publicationDate.localeCompare(left.data.update.publicationDate)
+      )
+  );
+
   eleventyConfig.addPassthroughCopy("assets");
-  eleventyConfig.addPassthroughCopy("index.html");
-  eleventyConfig.addPassthroughCopy({ "updates/index.html": "updates/index.html" });
 
   return {
     dir: {
@@ -23,7 +30,7 @@ export default function (eleventyConfig) {
       includes: "../_includes",
       output: "_site"
     },
-    templateFormats: ["md"],
+    templateFormats: ["md", "njk"],
     markdownTemplateEngine: "njk"
   };
 }

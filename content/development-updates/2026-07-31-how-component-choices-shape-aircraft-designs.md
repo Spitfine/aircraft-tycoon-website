@@ -2,6 +2,7 @@
 layout: layouts/development-update.njk
 permalink: /updates/2026-07-31-how-component-choices-shape-aircraft-designs.html
 update:
+  status: published
   publicationDate: "2026-07-31"
   slug: how-component-choices-shape-aircraft-designs
   displayDate:
@@ -21,7 +22,18 @@ update:
     en: Aircraft Design is built around connected decisions. Engines, construction methods, wings and airframes can all change performance, viability and the trade-offs a company must accept.
     pt: O Aircraft Design assenta em decisões interligadas. Motores, métodos de construção, asas e estruturas podem alterar desempenho, viabilidade e os compromissos que a empresa terá de aceitar.
   cover:
+    src: /assets/updates/aircraft-design/aircraft-design-ready.webp?v=20260803-2
+    alt: Aircraft Design configuration ready for confirmation
     absoluteUrl: https://aircraft-tycoon.com/assets/updates/aircraft-design/aircraft-design-ready.webp?v=20260803-2
+  surfaces:
+    archive:
+      excerpt:
+        en: See how connected choices across engines, construction methods, wings and airframes affect performance, safety, payload, cost and design readiness.
+        pt: Vê como escolhas interligadas de motores, métodos de construção, asas e estruturas afetam desempenho, segurança, carga útil, custo e prontidão do design.
+    homepage:
+      excerpt:
+        en: A closer look at how engines, construction methods, wings and airframes affect performance, safety, payload, production cost and design readiness.
+        pt: Uma análise de como motores, métodos de construção, asas e estruturas afetam desempenho, segurança, carga útil, custo de produção e prontidão do design.
   images:
     start:
       src: /assets/updates/aircraft-design/aircraft-design-start.webp?v=20260803-2
