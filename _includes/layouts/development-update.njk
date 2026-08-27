@@ -1,3 +1,4 @@
+{%- from "update-content.njk" import renderSections -%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +25,12 @@
 <div class="wrap language-copy" data-lang="pt" hidden><div class="update-meta"><span>{{ update.displayDate.pt }}</span><span>{{ update.type.pt }}</span><span>{{ update.category }}</span></div><h1>{{ update.title.pt }}</h1><p class="article-deck">{{ update.deck.pt }}</p></div>
 </header>
 <section class="section"><div class="wrap article-shell">
-{{ content | safe }}
+<article class="article-body language-copy" data-lang="en">
+{{ renderSections(sections, "en") }}
+</article>
+<article class="article-body language-copy" data-lang="pt" hidden>
+{{ renderSections(sections, "pt") }}
+</article>
 <aside class="article-sidebar"><div class="language-copy" data-lang="en"><h3>{{ update.sidebar.title.en }}</h3><p>{{ update.sidebar.copy.en }}</p><div class="article-actions"><a class="btn secondary" href="/updates/">All updates</a><a class="btn secondary" href="/">Official website</a></div></div><div class="language-copy" data-lang="pt" hidden><h3>{{ update.sidebar.title.pt }}</h3><p>{{ update.sidebar.copy.pt }}</p><div class="article-actions"><a class="btn secondary" href="/updates/">Todas as atualizações</a><a class="btn secondary" href="/">Website oficial</a></div></div></aside>
 </div>
 <div class="wrap steam-update-section"><div class="language-copy" data-lang="en"><div class="kicker">{{ update.steam.kicker.en }}</div><h2>{{ update.steam.title.en }}</h2><p class="copy">{{ update.steam.copy.en }}</p></div><div class="language-copy" data-lang="pt" hidden><div class="kicker">{{ update.steam.kicker.pt }}</div><h2>{{ update.steam.title.pt }}</h2><p class="copy">{{ update.steam.copy.pt }}</p></div><div class="steam-update-widget-column"><div class="steam-widget-viewport" id="steam-update-widget-viewport"><iframe allowfullscreen="" class="steam-widget-frame" frameborder="0" height="190" id="steam-update-widget" loading="lazy" width="646" data-src-en="{{ update.steam.widget.en }}" data-src-pt="{{ update.steam.widget.pt }}" title="Aircraft Tycoon on Steam"></iframe></div></div></div>
