@@ -7,6 +7,7 @@
     "serve": "eleventy --serve"
   },
   "devDependencies": {
-    "@11ty/eleventy": "3.1.6"
+    "@11ty/eleventy": "3.1.6",
+    "gray-matter": "4.0.3"
   }
 }
