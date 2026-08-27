@@ -1,0 +1,389 @@
+settings:
+  content:
+    merge: true
+
+content:
+  - name: development_updates
+    label: Development Updates
+    type: collection
+    path: content/development-updates
+    format: yaml-frontmatter
+    subfolders: false
+    operations:
+      create: false
+      rename: false
+      delete: false
+    view:
+      fields:
+        - update.title.en
+        - update.status
+        - update.publicationDate
+        - update.category
+      primary: update.title.en
+      sort:
+        - update.publicationDate
+        - update.title.en
+        - update.category
+      search:
+        - update.title.en
+        - update.title.pt
+        - update.category
+        - update.slug
+      default:
+        sort: update.publicationDate
+        order: desc
+    fields:
+      - name: layout
+        label: Layout
+        type: string
+        hidden: true
+        readonly: true
+      - name: permalink
+        label: Permalink
+        type: string
+        hidden: true
+        readonly: true
+      - name: update
+        label: Update metadata
+        type: object
+        fields:
+          - name: status
+            label: Publication status
+            type: string
+            readonly: true
+          - name: publicationDate
+            label: Publication date
+            type: string
+            readonly: true
+          - name: slug
+            label: Slug
+            type: string
+            readonly: true
+          - name: displayDate
+            label: Display date
+            type: object
+            fields:
+              - name: en
+                label: English display date
+                type: string
+              - name: pt
+                label: Portuguese display date
+                type: string
+          - name: title
+            label: Title
+            type: object
+            fields:
+              - name: en
+                label: English title
+                type: string
+                required: true
+              - name: pt
+                label: Portuguese title
+                type: string
+                required: true
+          - name: type
+            label: Update type
+            type: object
+            readonly: true
+            fields:
+              - name: en
+                label: English type
+                type: string
+              - name: pt
+                label: Portuguese type
+                type: string
+          - name: category
+            label: Category
+            type: string
+          - name: description
+            label: Description
+            type: text
+          - name: socialDescription
+            label: Social description
+            type: text
+          - name: canonicalUrl
+            label: Canonical URL
+            type: string
+            readonly: true
+          - name: deck
+            label: Deck
+            type: object
+            fields:
+              - name: en
+                label: English deck
+                type: text
+              - name: pt
+                label: Portuguese deck
+                type: text
+          - name: cover
+            label: Cover
+            type: object
+            fields:
+              - name: src
+                label: Cover path
+                type: string
+                readonly: true
+              - name: alt
+                label: Cover alt text
+                type: string
+              - name: absoluteUrl
+                label: Cover absolute URL
+                type: string
+                readonly: true
+          - name: surfaces
+            label: Derived editorial surfaces
+            type: object
+            fields:
+              - name: archive
+                label: Archive
+                type: object
+                fields:
+                  - name: excerpt
+                    label: Archive excerpt
+                    type: object
+                    fields:
+                      - name: en
+                        label: English archive excerpt
+                        type: text
+                      - name: pt
+                        label: Portuguese archive excerpt
+                        type: text
+              - name: homepage
+                label: Homepage
+                type: object
+                fields:
+                  - name: excerpt
+                    label: Homepage excerpt
+                    type: object
+                    fields:
+                      - name: en
+                        label: English homepage excerpt
+                        type: text
+                      - name: pt
+                        label: Portuguese homepage excerpt
+                        type: text
+          - name: sidebar
+            label: Sidebar
+            type: object
+            fields:
+              - name: title
+                label: Sidebar title
+                type: object
+                fields:
+                  - name: en
+                    label: English sidebar title
+                    type: string
+                  - name: pt
+                    label: Portuguese sidebar title
+                    type: string
+              - name: copy
+                label: Sidebar copy
+                type: object
+                fields:
+                  - name: en
+                    label: English sidebar copy
+                    type: text
+                  - name: pt
+                    label: Portuguese sidebar copy
+                    type: text
+          - name: steam
+            label: Steam
+            type: object
+            fields:
+              - name: kicker
+                label: Steam kicker
+                type: object
+                fields:
+                  - name: en
+                    label: English Steam kicker
+                    type: string
+                  - name: pt
+                    label: Portuguese Steam kicker
+                    type: string
+              - name: title
+                label: Steam title
+                type: object
+                fields:
+                  - name: en
+                    label: English Steam title
+                    type: string
+                  - name: pt
+                    label: Portuguese Steam title
+                    type: string
+              - name: copy
+                label: Steam copy
+                type: object
+                fields:
+                  - name: en
+                    label: English Steam copy
+                    type: text
+                  - name: pt
+                    label: Portuguese Steam copy
+                    type: text
+              - name: widget
+                label: Steam widget URLs
+                type: object
+                readonly: true
+                fields:
+                  - name: en
+                    label: English Steam widget URL
+                    type: string
+                  - name: pt
+                    label: Portuguese Steam widget URL
+                    type: string
+      - name: sections
+        label: Editorial sections
+        type: block
+        list: true
+        blockKey: type
+        blocks:
+          - name: prose
+            label: Prose
+            fields:
+              - name: body
+                label: Prose
+                type: object
+                fields:
+                  - name: en
+                    label: English prose
+                    type: rich-text
+                    options:
+                      format: markdown
+                      media: false
+                      switcher: false
+                  - name: pt
+                    label: Portuguese prose
+                    type: rich-text
+                    options:
+                      format: markdown
+                      media: false
+                      switcher: false
+          - name: image
+            label: Image
+            fields:
+              - name: image
+                label: Image
+                type: object
+                fields:
+                  - name: src
+                    label: Image path
+                    type: string
+                    readonly: true
+                  - name: alt
+                    label: Alt text
+                    type: object
+                    fields:
+                      - name: en
+                        label: English alt text
+                        type: text
+                      - name: pt
+                        label: Portuguese alt text
+                        type: text
+                  - name: caption
+                    label: Caption
+                    type: object
+                    fields:
+                      - name: en
+                        label: English caption
+                        type: text
+                      - name: pt
+                        label: Portuguese caption
+                        type: text
+          - name: comparison
+            label: Comparison
+            fields:
+              - name: images
+                label: Comparison images
+                type: object
+                list:
+                  min: 2
+                  max: 2
+                fields:
+                  - name: src
+                    label: Image path
+                    type: string
+                    readonly: true
+                  - name: alt
+                    label: Alt text
+                    type: object
+                    fields:
+                      - name: en
+                        label: English alt text
+                        type: text
+                      - name: pt
+                        label: Portuguese alt text
+                        type: text
+                  - name: caption
+                    label: Caption
+                    type: object
+                    fields:
+                      - name: en
+                        label: English caption
+                        type: text
+                      - name: pt
+                        label: Portuguese caption
+                        type: text
+          - name: callout
+            label: Callout
+            fields:
+              - name: title
+                label: Callout title
+                type: object
+                fields:
+                  - name: en
+                    label: English callout title
+                    type: string
+                  - name: pt
+                    label: Portuguese callout title
+                    type: string
+              - name: body
+                label: Callout body
+                type: object
+                fields:
+                  - name: en
+                    label: English callout body
+                    type: text
+                  - name: pt
+                    label: Portuguese callout body
+                    type: text
+          - name: stats
+            label: Stats
+            fields:
+              - name: items
+                label: Stats
+                type: object
+                list: true
+                fields:
+                  - name: value
+                    label: Value
+                    type: object
+                    fields:
+                      - name: en
+                        label: English value
+                        type: string
+                      - name: pt
+                        label: Portuguese value
+                        type: string
+                  - name: label
+                    label: Label
+                    type: object
+                    fields:
+                      - name: en
+                        label: English label
+                        type: string
+                      - name: pt
+                        label: Portuguese label
+                        type: string
+          - name: note
+            label: Note
+            fields:
+              - name: body
+                label: Note
+                type: object
+                fields:
+                  - name: en
+                    label: English note
+                    type: text
+                  - name: pt
+                    label: Portuguese note
+                    type: text
