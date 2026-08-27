@@ -387,3 +387,265 @@ content:
                   - name: pt
                     label: Portuguese note
                     type: text
+  - name: development_update_drafts
+    label: Development Update Drafts
+    type: collection
+    path: editorial-drafts/development-updates
+    format: yaml-frontmatter
+    subfolders: false
+    exclude:
+      - .gitkeep
+    operations:
+      create: true
+      rename: false
+      delete: false
+    filename:
+      template: "draft-{year}-{month}-{day}-{primary}.md"
+      field: false
+    commit:
+      templates:
+        create: "Create Development Update draft {filename} (via Pages CMS)"
+        update: "Update Development Update draft {filename} (via Pages CMS)"
+    view:
+      fields:
+        - update.title.en
+        - update.title.pt
+        - update.category
+      primary: update.title.en
+      sort:
+        - update.title.en
+        - update.category
+      search:
+        - update.title.en
+        - update.title.pt
+        - update.category
+    fields:
+      - name: update
+        label: Draft metadata
+        type: object
+        fields:
+          - name: title
+            label: Title
+            type: object
+            fields:
+              - name: en
+                label: English title
+                type: string
+                required: true
+              - name: pt
+                label: Portuguese title
+                type: string
+          - name: category
+            label: Category
+            type: string
+          - name: description
+            label: Description
+            type: text
+          - name: socialDescription
+            label: Social description
+            type: text
+          - name: deck
+            label: Deck
+            type: object
+            fields:
+              - name: en
+                label: English deck
+                type: text
+              - name: pt
+                label: Portuguese deck
+                type: text
+          - name: surfaces
+            label: Derived editorial surfaces
+            type: object
+            fields:
+              - name: archive
+                label: Archive
+                type: object
+                fields:
+                  - name: excerpt
+                    label: Archive excerpt
+                    type: object
+                    fields:
+                      - name: en
+                        label: English archive excerpt
+                        type: text
+                      - name: pt
+                        label: Portuguese archive excerpt
+                        type: text
+              - name: homepage
+                label: Homepage
+                type: object
+                fields:
+                  - name: excerpt
+                    label: Homepage excerpt
+                    type: object
+                    fields:
+                      - name: en
+                        label: English homepage excerpt
+                        type: text
+                      - name: pt
+                        label: Portuguese homepage excerpt
+                        type: text
+          - name: cover
+            label: Cover
+            type: object
+            fields:
+              - name: alt
+                label: Cover alt text
+                type: string
+      - name: sections
+        label: Editorial sections
+        type: block
+        list: true
+        blockKey: type
+        blocks:
+          - name: prose
+            label: Prose
+            fields:
+              - name: body
+                label: Prose
+                type: object
+                fields:
+                  - name: en
+                    label: English prose
+                    type: rich-text
+                    options:
+                      format: markdown
+                      media: false
+                      switcher: false
+                  - name: pt
+                    label: Portuguese prose
+                    type: rich-text
+                    options:
+                      format: markdown
+                      media: false
+                      switcher: false
+          - name: image
+            label: Image
+            fields:
+              - name: image
+                label: Image
+                type: object
+                fields:
+                  - name: src
+                    label: Image path — temporary manual field
+                    description: Media picker/upload support will replace manual path entry in a later phase.
+                    type: string
+                  - name: alt
+                    label: Alt text
+                    type: object
+                    fields:
+                      - name: en
+                        label: English alt text
+                        type: text
+                      - name: pt
+                        label: Portuguese alt text
+                        type: text
+                  - name: caption
+                    label: Caption
+                    type: object
+                    fields:
+                      - name: en
+                        label: English caption
+                        type: text
+                      - name: pt
+                        label: Portuguese caption
+                        type: text
+          - name: comparison
+            label: Comparison
+            fields:
+              - name: images
+                label: Comparison images
+                type: object
+                list:
+                  min: 2
+                  max: 2
+                fields:
+                  - name: src
+                    label: Image path — temporary manual field
+                    description: Media picker/upload support will replace manual path entry in a later phase.
+                    type: string
+                  - name: alt
+                    label: Alt text
+                    type: object
+                    fields:
+                      - name: en
+                        label: English alt text
+                        type: text
+                      - name: pt
+                        label: Portuguese alt text
+                        type: text
+                  - name: caption
+                    label: Caption
+                    type: object
+                    fields:
+                      - name: en
+                        label: English caption
+                        type: text
+                      - name: pt
+                        label: Portuguese caption
+                        type: text
+          - name: callout
+            label: Callout
+            fields:
+              - name: title
+                label: Callout title
+                type: object
+                fields:
+                  - name: en
+                    label: English callout title
+                    type: string
+                  - name: pt
+                    label: Portuguese callout title
+                    type: string
+              - name: body
+                label: Callout body
+                type: object
+                fields:
+                  - name: en
+                    label: English callout body
+                    type: text
+                  - name: pt
+                    label: Portuguese callout body
+                    type: text
+          - name: stats
+            label: Stats
+            fields:
+              - name: items
+                label: Stats
+                type: object
+                list: true
+                fields:
+                  - name: value
+                    label: Value
+                    type: object
+                    fields:
+                      - name: en
+                        label: English value
+                        type: string
+                      - name: pt
+                        label: Portuguese value
+                        type: string
+                  - name: label
+                    label: Label
+                    type: object
+                    fields:
+                      - name: en
+                        label: English label
+                        type: string
+                      - name: pt
+                        label: Portuguese label
+                        type: string
+          - name: note
+            label: Note
+            fields:
+              - name: body
+                label: Note
+                type: object
+                fields:
+                  - name: en
+                    label: English note
+                    type: text
+                  - name: pt
+                    label: Portuguese note
+                    type: text
