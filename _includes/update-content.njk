@@ -1,0 +1,11 @@
+{% macro figure(image, alt, caption) -%}
+<figure class="article-figure"><img class="update-shot" src="{{ image }}" alt="{{ alt }}" loading="lazy" decoding="async"/><figcaption>{{ caption }}</figcaption></figure>
+{%- endmacro %}
+
+{% macro callout(label, text) -%}
+<div class="update-callout"><strong>{{ label }}</strong> {{ text }}</div>
+{%- endmacro %}
+
+{% macro stats(items) -%}
+<div class="update-stat-grid">{% for item in items %}<div class="update-stat"><b>{{ item.value }}</b><span>{{ item.label }}</span></div>{% endfor %}</div>
+{%- endmacro %}
