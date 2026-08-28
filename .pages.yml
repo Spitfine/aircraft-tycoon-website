@@ -417,6 +417,16 @@ content:
       create: true
       rename: false
       delete: false
+    actions:
+      - name: preview-development-update
+        label: Preview Draft
+        workflow: pages-cms-preview-development-update.yml
+        scope: entry
+        ref: current
+        confirm:
+          title: Preview this draft?
+          message: This builds or updates a non-production editorial preview from the saved draft. It does not publish the article. The preview environment is not confidential.
+          button: Preview Draft
     filename:
       template: "draft-{year}-{month}-{day}-{primary}.md"
       field: false
