@@ -21,9 +21,38 @@ import matter from "gray-matter";
 
 const REPOSITORY = "Spitfine/aircraft-tycoon-website";
 const PREVIEW_ACTION = "preview-development-update";
+const PREPARE_PUBLICATION_ACTION = "prepare-development-update-publication";
 const DRAFT_MEDIA_PREFIX = "/__draft-media/development-updates/";
 const ALLOWED_MEDIA_EXTENSIONS = new Set([".png", ".jpg", ".jpeg", ".webp"]);
 const BLOCK_TYPES = new Set(["prose", "image", "comparison", "callout", "stats", "note"]);
+const ENGLISH_MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+const PORTUGUESE_MONTHS = [
+  "janeiro",
+  "fevereiro",
+  "março",
+  "abril",
+  "maio",
+  "junho",
+  "julho",
+  "agosto",
+  "setembro",
+  "outubro",
+  "novembro",
+  "dezembro"
+];
 const FORBIDDEN_UPDATE_KEYS = [
   "status",
   "publicationDate",
@@ -402,7 +431,7 @@ function validateDraftStructure(data, strictPublish) {
   return { errors, media: uniqueMedia };
 }
 
-function validatePagesCmsPayload(environmentName) {
+function parsePagesCmsPayload(environmentName) {
   const rawPayload = process.env[environmentName];
   if (!rawPayload) {
     throw new ContractError(`Environment variable ${environmentName} is empty.`);
@@ -415,10 +444,18 @@ function validatePagesCmsPayload(environmentName) {
     throw new ContractError(`Malformed Pages CMS payload JSON: ${error.message}`);
   }
 
+  return payload;
+}
+
+function validatePagesCmsPayload(environmentName, mode = "preview") {
+  const payload = parsePagesCmsPayload(environmentName);
+  const promotion = mode === "prepare-publish";
+  const expectedAction = promotion ? PREPARE_PUBLICATION_ACTION : PREVIEW_ACTION;
+
   const errors = [];
   if (payload?.source !== "pages-cms") errors.push('payload.source must equal "pages-cms".');
-  if (payload?.action?.name !== PREVIEW_ACTION) {
-    errors.push(`payload.action.name must equal "${PREVIEW_ACTION}".`);
+  if (payload?.action?.name !== expectedAction) {
+    errors.push(`payload.action.name must equal "${expectedAction}".`);
   }
   if (payload?.context?.type !== "entry") errors.push('payload.context.type must equal "entry".');
   if (payload?.context?.name !== "development_update_drafts") {
@@ -444,15 +481,51 @@ function validatePagesCmsPayload(environmentName) {
   const dispatchRef = process.env.GITHUB_REF_NAME?.replace(/^refs\/heads\//u, "");
   if (!isNonEmptyString(payloadRef)) {
     errors.push("payload.repository.ref is required.");
-  } else if (dispatchRef && payloadRef !== dispatchRef) {
+  } else if (promotion && payloadRef !== "main") {
+    errors.push('payload.repository.ref must equal "main" for publication preparation.');
+  } else if (!promotion && dispatchRef && payloadRef !== dispatchRef) {
     errors.push("payload.repository.ref does not match the dispatched ref.");
+  }
+  if (promotion && dispatchRef !== "main") {
+    errors.push('GITHUB_REF_NAME must equal "main" for publication preparation.');
   }
 
   const payloadSha = payload?.repository?.sha;
   if (typeof payloadSha !== "string" || !/^[0-9a-f]{40}$/iu.test(payloadSha)) {
     errors.push("payload.repository.sha must be a full Git SHA.");
-  } else if (process.env.GITHUB_SHA && payloadSha.toLowerCase() !== process.env.GITHUB_SHA.toLowerCase()) {
+  } else if (
+    promotion &&
+    (typeof process.env.GITHUB_SHA !== "string" ||
+      !/^[0-9a-f]{40}$/iu.test(process.env.GITHUB_SHA) ||
+      payloadSha.toLowerCase() !== process.env.GITHUB_SHA.toLowerCase())
+  ) {
     errors.push("payload.repository.sha does not match the checked-out dispatch SHA.");
+  } else if (
+    !promotion &&
+    process.env.GITHUB_SHA &&
+    payloadSha.toLowerCase() !== process.env.GITHUB_SHA.toLowerCase()
+  ) {
+    errors.push("payload.repository.sha does not match the checked-out dispatch SHA.");
+  }
+
+  const entryBlobSha = payload?.context?.data?.sha;
+  if (
+    promotion &&
+    entryBlobSha !== undefined &&
+    (typeof entryBlobSha !== "string" || !/^[0-9a-f]{40}$/iu.test(entryBlobSha))
+  ) {
+    errors.push("payload.context.data.sha must be a full Git blob SHA when supplied.");
+  }
+
+  const publicationDate = payload?.inputs?.["publication-date"];
+  if (promotion && !validatePublicationDate(publicationDate)) {
+    errors.push("payload.inputs.publication-date must be a real date in YYYY-MM-DD format.");
+  }
+  if (promotion && payload?.inputs?.["reviewed-preview"] !== true) {
+    errors.push("payload.inputs.reviewed-preview must equal true.");
+  }
+  if (promotion && payload?.inputs?.["claims-verified"] !== true) {
+    errors.push("payload.inputs.claims-verified must equal true.");
   }
 
   if (errors.length > 0) {
@@ -462,8 +535,37 @@ function validatePagesCmsPayload(environmentName) {
   return {
     draft: payload.context.path,
     ref: payloadRef,
-    sha: payloadSha.toLowerCase()
+    sha: payloadSha.toLowerCase(),
+    entryBlobSha: typeof entryBlobSha === "string" ? entryBlobSha.toLowerCase() : null,
+    publicationDate: promotion ? publicationDate : null
   };
+}
+
+function validateEntryBlobFreshness(draftPath, expectedBlobSha) {
+  if (!expectedBlobSha) {
+    return;
+  }
+
+  const lookup = spawnSync("git", ["ls-tree", "HEAD", "--", draftPath.repositoryPath], {
+    cwd: repositoryRoot,
+    encoding: "utf8"
+  });
+  if (lookup.error) {
+    throw new ContractError(`Could not inspect the checked-out draft Git blob: ${lookup.error.message}`);
+  }
+  if (lookup.status !== 0) {
+    throw new ContractError(
+      `Could not inspect the checked-out draft Git blob: ${lookup.stderr.trim() || "git ls-tree failed"}`
+    );
+  }
+
+  const blobMatch = lookup.stdout.match(/^\d+\s+blob\s+([0-9a-f]{40})\t/u);
+  if (!blobMatch) {
+    throw new ContractError("The checked-out draft does not resolve to a tracked Git blob at HEAD.");
+  }
+  if (blobMatch[1].toLowerCase() !== expectedBlobSha.toLowerCase()) {
+    throw new ContractError("payload.context.data.sha does not match the checked-out draft Git blob SHA.");
+  }
 }
 
 function createPublicationPlan(draftPath, data, media, publicationDate, validationErrors) {
@@ -482,6 +584,9 @@ function createPublicationPlan(draftPath, data, media, publicationDate, validati
   const publicPermalink = slug && dateValid
     ? `/updates/${publicationDate}-${slug}.html`
     : null;
+  const canonicalUrl = publicPermalink
+    ? `https://aircraft-tycoon.com${publicPermalink}`
+    : null;
   const targetPublicMediaDirectory = slug ? `assets/updates/${slug}/` : null;
   const mediaMappings = media.map((item) => ({
     source: item.sourcePath,
@@ -492,15 +597,334 @@ function createPublicationPlan(draftPath, data, media, publicationDate, validati
   return {
     command: "validate-publish",
     draftSourcePath: draftPath.repositoryPath,
+    englishTitle: getValue(data, "update.title.en"),
     publicationDate,
     derivedSlug: slug || null,
     targetMarkdownPath,
     publicPermalink,
+    canonicalUrl,
     targetPublicMediaDirectory,
     draftMediaSourcePaths: media.map((item) => item.sourcePath),
     mediaMappings,
     validationStatus: validationErrors.length === 0 ? "PASS" : "FAIL",
     errors: validationErrors
+  };
+}
+
+function resolvePublicationInvocation(flags, commandName) {
+  requireOnlyFlags(flags, new Set(["--draft", "--publication-date", "--payload-env"]));
+  const hasDraft = flags.has("--draft");
+  const hasPublicationDate = flags.has("--publication-date");
+  const hasPayload = flags.has("--payload-env");
+
+  if (hasPayload) {
+    if (hasDraft || hasPublicationDate) {
+      throw new ContractError(
+        `${commandName} workflow mode cannot be combined with --draft or --publication-date.`
+      );
+    }
+    const payload = validatePagesCmsPayload(flags.get("--payload-env"), "prepare-publish");
+    const draftPath = resolveDraftPath(payload.draft);
+    validateEntryBlobFreshness(draftPath, payload.entryBlobSha);
+    return {
+      draftPath,
+      publicationDate: payload.publicationDate,
+      sourceSha: payload.sha
+    };
+  }
+
+  if (!hasDraft || !hasPublicationDate) {
+    throw new ContractError(
+      `${commandName} local mode requires both --draft and --publication-date.`
+    );
+  }
+  return {
+    draftPath: resolveDraftPath(flags.get("--draft")),
+    publicationDate: flags.get("--publication-date"),
+    sourceSha: null
+  };
+}
+
+function createValidatedPublicationContext(flags, commandName) {
+  const invocation = resolvePublicationInvocation(flags, commandName);
+  const data = parseDraft(invocation.draftPath);
+  const validation = validateDraftStructure(data, true);
+  const plan = createPublicationPlan(
+    invocation.draftPath,
+    data,
+    validation.media,
+    invocation.publicationDate,
+    validation.errors
+  );
+  return { ...invocation, data, media: validation.media, plan };
+}
+
+function formatDisplayDate(publicationDate) {
+  const [year, month, day] = publicationDate.split("-").map(Number);
+  return {
+    en: `${day} ${ENGLISH_MONTHS[month - 1]} ${year}`,
+    pt: `${day} de ${PORTUGUESE_MONTHS[month - 1]} de ${year}`
+  };
+}
+
+function buildSteamWidgetUrl(language, slug, content) {
+  const parameters = new URLSearchParams([
+    ["l", language],
+    ["utm_source", "official_website"],
+    ["utm_medium", "development_update"],
+    ["utm_campaign", `development_update_${slug}`],
+    ["utm_content", content]
+  ]);
+  return `https://store.steampowered.com/widget/4997100/?${parameters.toString()}`;
+}
+
+function rewritePublicationMedia(data, media, mediaMappings) {
+  const publicationData = structuredClone(data);
+  const replacements = new Map(
+    media.flatMap((item, index) => item.urls.map((url) => [url, mediaMappings[index].publicUrl]))
+  );
+
+  if (publicationData.update?.cover?.src && replacements.has(publicationData.update.cover.src)) {
+    publicationData.update.cover.src = replacements.get(publicationData.update.cover.src);
+  }
+  if (Array.isArray(publicationData.sections)) {
+    for (const section of publicationData.sections) {
+      if (section.type === "image" && replacements.has(section.image?.src)) {
+        section.image.src = replacements.get(section.image.src);
+      }
+      if (section.type === "comparison" && Array.isArray(section.images)) {
+        for (const image of section.images) {
+          if (replacements.has(image?.src)) {
+            image.src = replacements.get(image.src);
+          }
+        }
+      }
+    }
+  }
+
+  return publicationData;
+}
+
+function buildPublicationDocument(data, media, plan) {
+  const rewritten = rewritePublicationMedia(data, media, plan.mediaMappings);
+  const draftUpdate = rewritten.update;
+  const coverSrc = draftUpdate.cover.src;
+
+  return {
+    layout: "layouts/development-update.njk",
+    permalink: plan.publicPermalink,
+    update: {
+      status: "published",
+      publicationDate: plan.publicationDate,
+      slug: plan.derivedSlug,
+      displayDate: formatDisplayDate(plan.publicationDate),
+      title: draftUpdate.title,
+      type: {
+        en: "Development Update",
+        pt: "Atualização de Desenvolvimento"
+      },
+      category: draftUpdate.category,
+      description: draftUpdate.description,
+      socialDescription: draftUpdate.socialDescription,
+      canonicalUrl: plan.canonicalUrl,
+      deck: draftUpdate.deck,
+      cover: {
+        src: coverSrc,
+        alt: draftUpdate.cover.alt,
+        absoluteUrl: `https://aircraft-tycoon.com${coverSrc}`
+      },
+      surfaces: draftUpdate.surfaces,
+      sidebar: {
+        title: {
+          en: "Development Update",
+          pt: "Atualização de Desenvolvimento"
+        },
+        copy: {
+          en: "Aircraft Tycoon is a historical aviation management game in active development by a solo developer.",
+          pt: "Aircraft Tycoon é um jogo histórico de gestão aeronáutica em desenvolvimento ativo por um solo developer."
+        }
+      },
+      steam: {
+        kicker: {
+          en: "Official Steam page",
+          pt: "Página oficial na Steam"
+        },
+        title: {
+          en: "Wishlist Aircraft Tycoon on Steam.",
+          pt: "Adiciona Aircraft Tycoon à tua lista de desejos."
+        },
+        copy: {
+          en: "Follow development and add the game to your wishlist for future updates.",
+          pt: "Acompanha o desenvolvimento e adiciona o jogo à tua lista de desejos para receber futuras novidades."
+        },
+        widget: {
+          en: buildSteamWidgetUrl("english", plan.derivedSlug, "article_widget_en"),
+          pt: buildSteamWidgetUrl("portuguese", plan.derivedSlug, "article_widget_pt")
+        }
+      }
+    },
+    sections: rewritten.sections
+  };
+}
+
+function isSafePublicationFilename(filename) {
+  return (
+    /^[A-Za-z0-9][A-Za-z0-9._-]*$/u.test(filename) &&
+    filename !== "." &&
+    filename !== ".." &&
+    !filename.endsWith(".")
+  );
+}
+
+function assertPublicationTargetsAvailable(plan, media) {
+  const targetMarkdown = resolve(repositoryRoot, plan.targetMarkdownPath);
+  const targetMediaDirectory = resolve(repositoryRoot, plan.targetPublicMediaDirectory);
+  if (existsSync(targetMarkdown)) {
+    throw new ContractError(`Publication target already exists: ${plan.targetMarkdownPath}`);
+  }
+  if (existsSync(targetMediaDirectory)) {
+    throw new ContractError(`Publication media directory already exists: ${plan.targetPublicMediaDirectory}`);
+  }
+  for (const item of media) {
+    if (!isSafePublicationFilename(item.filename)) {
+      throw new ContractError(`Draft media filename is not safe for publication: ${item.filename}`);
+    }
+  }
+
+  const contentDirectory = resolve(repositoryRoot, "content", "development-updates");
+  for (const entry of readdirSync(contentDirectory, { withFileTypes: true })) {
+    if (!entry.isFile() || ![".md", ".njk"].includes(extname(entry.name).toLowerCase())) {
+      continue;
+    }
+    const sourcePath = resolve(contentDirectory, entry.name);
+    let sourceData;
+    try {
+      sourceData = matter(readFileSync(sourcePath, "utf8")).data;
+    } catch (error) {
+      throw new ContractError(`Could not safely inspect existing publication source ${entry.name}: ${error.message}`);
+    }
+    if (sourceData?.permalink === plan.publicPermalink) {
+      throw new ContractError(
+        `Publication permalink already belongs to content/development-updates/${entry.name}.`
+      );
+    }
+  }
+}
+
+function auditSharedDraftMedia(draftPath, media) {
+  const referenceCounts = new Map(media.map((item) => [item.absolute, 0]));
+  for (const entry of readdirSync(draftRoot, { withFileTypes: true })) {
+    if (!entry.isFile() || extname(entry.name).toLowerCase() !== ".md") {
+      continue;
+    }
+
+    const absolute = realpathSync(resolve(draftRoot, entry.name));
+    if (absolute === draftPath.absolute) {
+      continue;
+    }
+    const otherDraftPath = {
+      absolute,
+      repositoryPath: toPosix(relative(repositoryRoot, absolute))
+    };
+    const otherData = parseDraft(otherDraftPath);
+    const otherValidation = validateDraftStructure(otherData, false);
+    if (otherValidation.errors.length > 0) {
+      throw new ContractError(
+        `Cannot safely audit draft media references in ${otherDraftPath.repositoryPath}.`,
+        otherValidation.errors.map((error) => `${otherDraftPath.repositoryPath}: ${error}`)
+      );
+    }
+
+    for (const item of media) {
+      if (otherValidation.media.some((candidate) => candidate.absolute === item.absolute)) {
+        referenceCounts.set(item.absolute, referenceCounts.get(item.absolute) + 1);
+      }
+    }
+  }
+  return referenceCounts;
+}
+
+function materializePublication(draftPath, data, media, plan) {
+  assertPublicationTargetsAvailable(plan, media);
+  const sharedReferenceCounts = auditSharedDraftMedia(draftPath, media);
+  const mediaMappings = plan.mediaMappings.map((mapping, index) => {
+    const sharedReferenceCount = sharedReferenceCounts.get(media[index].absolute);
+    return {
+      ...mapping,
+      copiedToPublic: true,
+      draftSourceRemoved: sharedReferenceCount === 0,
+      sharedReferenceCount
+    };
+  });
+  const publicationPlan = { ...plan, mediaMappings };
+  const publicationDocument = buildPublicationDocument(data, media, publicationPlan);
+  const targetMarkdown = resolve(repositoryRoot, plan.targetMarkdownPath);
+  const targetMediaDirectory = resolve(repositoryRoot, plan.targetPublicMediaDirectory);
+  const removedSources = [];
+  let mediaDirectoryCreated = false;
+  let markdownCreated = false;
+
+  try {
+    if (media.length > 0) {
+      mkdirSync(targetMediaDirectory, { recursive: false });
+      mediaDirectoryCreated = true;
+      for (let index = 0; index < media.length; index += 1) {
+        const destination = resolve(repositoryRoot, mediaMappings[index].destination);
+        copyFileSync(media[index].absolute, destination);
+        if (!readFileSync(media[index].absolute).equals(readFileSync(destination))) {
+          throw new ContractError(`Public media copy differs from its source: ${mediaMappings[index].destination}`);
+        }
+      }
+    }
+
+    writeFileSync(targetMarkdown, matter.stringify("", publicationDocument), "utf8");
+    markdownCreated = true;
+
+    for (let index = 0; index < media.length; index += 1) {
+      if (mediaMappings[index].draftSourceRemoved) {
+        removedSources.push({ absolute: media[index].absolute, contents: readFileSync(media[index].absolute) });
+        unlinkSync(media[index].absolute);
+      }
+    }
+    removedSources.push({ absolute: draftPath.absolute, contents: readFileSync(draftPath.absolute) });
+    unlinkSync(draftPath.absolute);
+  } catch (error) {
+    for (const source of removedSources.reverse()) {
+      mkdirSync(dirname(source.absolute), { recursive: true });
+      writeFileSync(source.absolute, source.contents);
+    }
+    if (markdownCreated && existsSync(targetMarkdown)) {
+      unlinkSync(targetMarkdown);
+    }
+    if (mediaDirectoryCreated && existsSync(targetMediaDirectory)) {
+      rmSync(targetMediaDirectory, { recursive: true, force: false });
+    }
+    throw error;
+  }
+
+  const changedPaths = [
+    plan.targetMarkdownPath,
+    ...mediaMappings.map((mapping) => mapping.destination),
+    draftPath.repositoryPath,
+    ...mediaMappings
+      .filter((mapping) => mapping.draftSourceRemoved)
+      .map((mapping) => mapping.source)
+  ].sort();
+
+  return {
+    command: "prepare-publish",
+    draftSourcePath: draftPath.repositoryPath,
+    publicationDate: plan.publicationDate,
+    derivedSlug: plan.derivedSlug,
+    targetMarkdownPath: plan.targetMarkdownPath,
+    publicPermalink: plan.publicPermalink,
+    canonicalUrl: plan.canonicalUrl,
+    targetPublicMediaDirectory: plan.targetPublicMediaDirectory,
+    mediaMappings,
+    removedDraftPath: draftPath.repositoryPath,
+    changedPaths,
+    validationStatus: "PASS",
+    errors: []
   };
 }
 
@@ -739,7 +1163,9 @@ function execute() {
       throw new ContractError("preview requires exactly one of --draft or --payload-env.");
     }
 
-    const payload = hasPayload ? validatePagesCmsPayload(flags.get("--payload-env")) : null;
+    const payload = hasPayload
+      ? validatePagesCmsPayload(flags.get("--payload-env"), "preview")
+      : null;
     const draftPath = resolveDraftPath(payload?.draft ?? flags.get("--draft"));
     const data = parseDraft(draftPath);
     const validation = validateDraftStructure(data, false);
@@ -751,17 +1177,7 @@ function execute() {
   }
 
   if (command === "validate-publish") {
-    requireOnlyFlags(flags, new Set(["--draft", "--publication-date"]));
-    const draftPath = resolveDraftPath(flags.get("--draft"));
-    const data = parseDraft(draftPath);
-    const validation = validateDraftStructure(data, true);
-    const plan = createPublicationPlan(
-      draftPath,
-      data,
-      validation.media,
-      flags.get("--publication-date"),
-      validation.errors
-    );
+    const { plan } = createValidatedPublicationContext(flags, command);
     process.stdout.write(`${JSON.stringify(plan, null, 2)}\n`);
     if (plan.validationStatus !== "PASS") {
       process.exitCode = 1;
@@ -769,7 +1185,17 @@ function execute() {
     return;
   }
 
-  throw new ContractError("Command must be preview or validate-publish.");
+  if (command === "prepare-publish") {
+    const { draftPath, data, media, plan } = createValidatedPublicationContext(flags, command);
+    if (plan.validationStatus !== "PASS") {
+      throw new ContractError("Publication preparation validation failed.", plan.errors);
+    }
+    const result = materializePublication(draftPath, data, media, plan);
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return;
+  }
+
+  throw new ContractError("Command must be preview, validate-publish or prepare-publish.");
 }
 
 try {

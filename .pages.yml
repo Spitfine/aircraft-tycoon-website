@@ -427,6 +427,31 @@ content:
           title: Preview this draft?
           message: This builds or updates a non-production editorial preview from the saved draft. It does not publish the article. The preview environment is not confidential.
           button: Preview Draft
+      - name: prepare-development-update-publication
+        label: Prepare Publication PR
+        workflow: pages-cms-prepare-development-update-publication.yml
+        scope: entry
+        ref: current
+        cancelable: false
+        fields:
+          - name: publication-date
+            label: Publication date (YYYY-MM-DD)
+            type: text
+            required: true
+          - name: reviewed-preview
+            label: I have reviewed the latest editorial preview.
+            type: checkbox
+            required: true
+            default: false
+          - name: claims-verified
+            label: I have verified that the public claims match the current approved product state.
+            type: checkbox
+            required: true
+            default: false
+        confirm:
+          title: Prepare publication PR?
+          message: This validates the saved draft and prepares a publication candidate in a new Git branch and Pull Request. It does not publish the article. The article only becomes public after the publication PR is reviewed and merged into main.
+          button: Prepare Publication PR
     filename:
       template: "draft-{year}-{month}-{day}-{primary}.md"
       field: false
