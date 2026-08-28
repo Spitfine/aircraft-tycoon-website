@@ -424,10 +424,19 @@ function validatePagesCmsPayload(environmentName) {
   if (payload?.context?.name !== "development_update_drafts") {
     errors.push('payload.context.name must equal "development_update_drafts".');
   }
-  if (payload?.repository?.owner !== "Spitfine" || payload?.repository?.repo !== "aircraft-tycoon-website") {
+  const payloadRepositoryOwner = payload?.repository?.owner;
+  const payloadRepositoryName = payload?.repository?.repo;
+  const payloadRepository =
+    typeof payloadRepositoryOwner === "string" && typeof payloadRepositoryName === "string"
+      ? `${payloadRepositoryOwner}/${payloadRepositoryName}`.toLowerCase()
+      : null;
+  if (payloadRepository !== REPOSITORY.toLowerCase()) {
     errors.push(`payload repository must equal ${REPOSITORY}.`);
   }
-  if (process.env.GITHUB_REPOSITORY && process.env.GITHUB_REPOSITORY !== REPOSITORY) {
+  if (
+    process.env.GITHUB_REPOSITORY &&
+    process.env.GITHUB_REPOSITORY.toLowerCase() !== REPOSITORY.toLowerCase()
+  ) {
     errors.push(`GITHUB_REPOSITORY must equal ${REPOSITORY}.`);
   }
 
