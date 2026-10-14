@@ -80,8 +80,7 @@ h3{font-family:Georgia,serif;font-size:24px;margin:0 0 10px}
 /* Keep the conceptual tree discoverable in the homepage navigation. */
 .pioneer-nav{height:auto;min-height:74px;flex-wrap:wrap;padding-block:12px}
 .pioneer-nav .links{flex-wrap:wrap;gap:16px}
-.links .nav-tree{display:inline-flex;align-items:center;padding:8px 14px;border:1px solid var(--gold);border-radius:6px;background:rgba(200,155,82,.16);color:var(--gold2);font-weight:700;line-height:1.25;white-space:nowrap}
-.nav-tree small{display:block;margin-top:3px;font-size:10px;font-weight:400;letter-spacing:.02em}
-.links .nav-tree:hover{background:rgba(200,155,82,.28);border-color:var(--gold2)}
+.links .nav-tree{display:inline-flex;white-space:nowrap}
 .links .nav-tree:focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
-@media(max-width:620px){.pioneer-nav .links{width:100%;justify-content:space-between}.pioneer-nav{gap:10px}.pioneer-nav .nav-tree{padding:7px 12px}}
+@media(max-width:620px){.pioneer-nav .links{width:100%;justify-content:space-between}.pioneer-nav{gap:10px}}
+.figure .rd-interior{height:auto;aspect-ratio:3/2}
