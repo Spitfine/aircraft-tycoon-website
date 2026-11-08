@@ -1111,8 +1111,9 @@ function runPreview(draftPath, data, media, sourceSha) {
     }
 
     const htmlPageCount = countHtmlFiles(resolve(repositoryRoot, "_site"));
-    if (htmlPageCount !== 4) {
-      throw new ContractError(`Preview build must contain exactly 4 HTML pages; found ${htmlPageCount}.`);
+    const previewPageCount = countHtmlFiles(resolve(repositoryRoot, "_site", "__editorial-preview"));
+    if (previewPageCount !== 1) {
+      throw new ContractError(`Preview build must contain exactly 1 editorial preview HTML page; found ${previewPageCount}.`);
     }
 
     const result = {
