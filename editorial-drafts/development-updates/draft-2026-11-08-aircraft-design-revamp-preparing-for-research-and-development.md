@@ -35,6 +35,7 @@ update:
   cover:
     alt: Aircraft Design — Airframe & Layout / Estrutura e configuração, pre-release
       alpha
+    src: /__draft-media/development-updates/02-aircraft-design-airframe-pre-release-alpha.png
 sections:
   - type: prose
     body:
@@ -74,6 +75,7 @@ sections:
         ainda precisam de atenção.
   - type: image
     image:
+      src: /__draft-media/development-updates/02-aircraft-design-airframe-pre-release-alpha.png
       alt:
         en: Airframe & Layout configuration view with structural choices and design
           checks in an unconfigured alpha draft.
@@ -113,6 +115,7 @@ sections:
         um design que ainda não foi preenchido.
   - type: image
     image:
+      src: /__draft-media/development-updates/01-aircraft-design-propulsion-pre-release-alpha.png
       alt:
         en: Propulsion & Fuel view with engine, propeller and fuel-system choices in an
           unconfigured alpha draft.
@@ -142,6 +145,7 @@ sections:
         organizados.
   - type: image
     image:
+      src: /__draft-media/development-updates/07-design-portfolio.jpg
       alt:
         en: Aircraft Design portfolio showing aircraft grouped by role, with model
           names, variants and revisions.
