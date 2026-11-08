@@ -1,0 +1,33 @@
+name: CMS publication checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "scripts/editorial/**"
+      - ".github/workflows/pages-cms-prepare-development-update-publication.yml"
+      - ".github/workflows/cms-publication-checks.yml"
+      - "package*.json"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/editorial/**"
+      - ".github/workflows/pages-cms-prepare-development-update-publication.yml"
+      - ".github/workflows/cms-publication-checks.yml"
+      - "package*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publication-regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node --test scripts/editorial/development-update-publication.test.mjs

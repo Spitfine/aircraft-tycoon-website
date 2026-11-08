@@ -31,6 +31,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify editorial publication regression checks
+        run: node --test scripts/editorial/development-update-publication.test.mjs
+
       - name: Validate Pages CMS promotion payload
         id: payload
         env:
@@ -204,7 +207,8 @@ jobs:
             .split("\0")
             .filter(Boolean)
             .sort();
-          const staged = execFileSync("git", ["diff", "--cached", "--name-only", "-z"], { encoding: "buffer" })
+          // The manifest records both sides of each move, independent of Git rename detection.
+          const staged = execFileSync("git", ["diff", "--cached", "--no-renames", "--name-only", "-z"], { encoding: "buffer" })
             .toString("utf8")
             .split("\0")
             .filter(Boolean)
