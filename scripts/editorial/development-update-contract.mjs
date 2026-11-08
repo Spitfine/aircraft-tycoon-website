@@ -877,7 +877,8 @@ function materializePublication(draftPath, data, media, plan) {
       }
     }
 
-    writeFileSync(targetMarkdown, matter.stringify("", publicationDocument), "utf8");
+    const publicationMarkdown = matter.stringify("", publicationDocument).trimEnd() + "\n";
+    writeFileSync(targetMarkdown, publicationMarkdown, "utf8");
     markdownCreated = true;
 
     for (let index = 0; index < media.length; index += 1) {
