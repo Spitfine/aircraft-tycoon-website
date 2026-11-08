@@ -48,7 +48,7 @@ sections:
         and prepare the system for future Research & Development integration.
 
 
-        A clearer place to shape your aircraft
+        ## A clearer place to shape your aircraft
 
 
         The interface groups design choices into five areas: Airframe & Layout,
@@ -65,7 +65,7 @@ sections:
         integração com investigação e desenvolvimento (R&D).
 
 
-        Um espaço mais claro para dar forma aos teus aviões
+        ## Um espaço mais claro para dar forma aos teus aviões
 
 
         A interface agrupa as escolhas em cinco áreas: estrutura e configuração,
@@ -89,7 +89,7 @@ sections:
   - type: prose
     body:
       en: >-
-        Bringing related choices together
+        ## Bringing related choices together
 
 
         The Propulsion & Fuel view brings engine, propeller arrangement and
@@ -101,7 +101,7 @@ sections:
         These screenshots show an unconfigured draft, so the empty preview and
         estimates reflect a design that has not yet been filled in.
       pt: >-
-        Reunir escolhas relacionadas
+        ## Reunir escolhas relacionadas
 
 
         A vista de propulsão e combustível reúne as escolhas do motor, da
@@ -129,14 +129,14 @@ sections:
   - type: prose
     body:
       en: >-
-        Keeping track of models and variants
+        ## Keeping track of models and variants
 
 
         Aircraft design also needs a clear overview. The portfolio view groups
         aircraft by role and brings model names, variants and revisions
         together, helping you see how your designs are organised.
       pt: >-
-        Acompanhar modelos e variantes
+        ## Acompanhar modelos e variantes
 
 
         O design dos aviões também precisa de uma visão de conjunto clara. O
@@ -159,7 +159,7 @@ sections:
   - type: prose
     body:
       en: |-
-        Preparing for Research & Development
+        ## Preparing for Research & Development
 
         The broader goal is to prepare Aircraft Design for its future connection with R&D. This post focuses on the design interface and the work leading towards that integration. The revamp is still in development; R&D integration is not yet being announced as complete or available.
 
@@ -169,11 +169,11 @@ sections:
 
         If you’d like to follow the project’s progress, you can follow Aircraft Tycoon and add it to your Steam wishlist:
 
-        [https://store.steampowered.com/app/4997100/?utm_source=official_website&utm_medium=development_update&utm_campaign=aircraft_design_revamp_20261108&utm_content=article_en](https://store.steampowered.com/app/4997100/?utm_source=official_website&utm_medium=development_update&utm_campaign=aircraft_design_revamp_20261108&utm_content=article_en)
+        [Wishlist Aircraft Tycoon on Steam](https://store.steampowered.com/app/4997100/?utm_source=official_website&utm_medium=development_update&utm_campaign=aircraft_design_revamp_20261108&utm_content=article_en)
 
         Thank you for following the development of Aircraft Tycoon!
       pt: |-
-        Preparar a investigação e desenvolvimento
+        ## Preparar a investigação e desenvolvimento
 
         O objetivo mais amplo é preparar o Aircraft Design para a sua futura ligação à investigação e desenvolvimento (R&D). Esta notícia centra-se na interface de design e no trabalho que prepara essa integração. A renovação continua em desenvolvimento; a integração com R&D ainda não está a ser anunciada como concluída ou disponível.
 
@@ -183,7 +183,7 @@ sections:
 
         Se quiseres acompanhar o projeto, podes seguir Aircraft Tycoon e adicioná-lo à tua lista de desejos na Steam:
 
-        [https://store.steampowered.com/app/4997100/?utm_source=official_website&utm_medium=development_update&utm_campaign=aircraft_design_revamp_20261108&utm_content=article_pt](https://store.steampowered.com/app/4997100/?utm_source=official_website&utm_medium=development_update&utm_campaign=aircraft_design_revamp_20261108&utm_content=article_pt)
+        [Adicionar Aircraft Tycoon à lista de desejos na Steam](https://store.steampowered.com/app/4997100/?utm_source=official_website&utm_medium=development_update&utm_campaign=aircraft_design_revamp_20261108&utm_content=article_pt)
 
         Obrigado por acompanhares o desenvolvimento de Aircraft Tycoon!
 ---
